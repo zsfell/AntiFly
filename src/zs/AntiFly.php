@@ -39,7 +39,7 @@ class AntiFly extends PluginBase implements Listener {
         if (!$player instanceof Player) {
             return;
         }
-
+        
         $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
 
         if ($event->isFlying() && !$this->canFly($player, $purePerms)) {
@@ -48,14 +48,13 @@ class AntiFly extends PluginBase implements Listener {
         }
     }
 
-private function canFly(Player $player, $purePerms): bool {
-    $group = $purePerms->getUserDataMgr()->getGroup($player);
-    if ($group === null) {
-        return false;
+    private function canFly(Player $player, $purePerms): bool {
+        $group = $purePerms->getUserDataMgr()->getGroup($player);
+        if ($group === null) {
+            return false;
+        }
+
+        $flightPermission = $this->getConfig()->get("flight_permission");
+        return $purePerms->hasGroupPermission($group, $flightPermission);
     }
-
-    $flightPermission = $this->getConfig()->get("flight_permission");
-
-    return $purePerms->hasGroupPermission($group, $flightPermission);
-}
 }
