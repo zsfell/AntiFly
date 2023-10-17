@@ -23,7 +23,9 @@ class AntiFly extends PluginBase implements Listener {
             return;
         }
 
-        if ($player->isFlying() && !$player->hasPermission("allow.fly")) {
+        $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
+
+        if ($player->isFlying() && !$this->canFly($player, $purePerms)) {
             $player->kick("Flying without permission");
         }
     }
@@ -35,9 +37,20 @@ class AntiFly extends PluginBase implements Listener {
             return;
         }
 
-        if ($event->isFlying() && !$player->hasPermission("allow.fly")) {
-            $event->setCancelled(true); // Prevent the player from toggling flight
+        $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
+
+        if ($event->isFlying() && !$this->canFly($player, $purePerms)) {
+            $event->setCancelled(true);
             $player->kick("Flying without permission");
         }
+    }
+
+    private function canFly(Player $player, $purePerms): bool {
+        $group = $purePerms->getUserDataMgr()->getGroup($player);
+        if ($group === null) {
+            return false;
+        }
+
+        return $purePerms->hasGroupPermission($group, "allow.fly");
     }
 }
