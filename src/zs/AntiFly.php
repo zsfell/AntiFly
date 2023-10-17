@@ -13,6 +13,9 @@ class AntiFly extends PluginBase implements Listener {
     public function onEnable(): void {
         $this->getLogger()->info("AntiFly has been enabled");
 
+        $this->saveDefaultConfig();
+        $this->reloadConfig();
+
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
 
@@ -45,12 +48,14 @@ class AntiFly extends PluginBase implements Listener {
         }
     }
 
-    private function canFly(Player $player, $purePerms): bool {
-        $group = $purePerms->getUserDataMgr()->getGroup($player);
-        if ($group === null) {
-            return false;
-        }
-
-        return $purePerms->hasGroupPermission($group, "allow.fly");
+private function canFly(Player $player, $purePerms): bool {
+    $group = $purePerms->getUserDataMgr()->getGroup($player);
+    if ($group === null) {
+        return false;
     }
+
+    $flightPermission = $this->getConfig()->get("flight_permission");
+
+    return $purePerms->hasGroupPermission($group, $flightPermission);
+}
 }
