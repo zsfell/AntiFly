@@ -1,0 +1,6 @@
+name: AntiFly
+main: zs\AntiFly
+version: 1.0.0
+api: [4.0.0, 5.0.0]
+author: zsfell
+description: A plugin to check and restrict flight permissions.
