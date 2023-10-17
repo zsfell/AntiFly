@@ -29,7 +29,8 @@ class AntiFly extends PluginBase implements Listener {
         $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
 
         if ($player->isFlying() && !$this->canFly($player, $purePerms)) {
-            $player->kick("Flying without permission");
+            $kickReason = $this->getConfig()->getNested("flight_kick_reasons.no_permission");
+            $player->kick($kickReason);
         }
     }
 
@@ -39,12 +40,13 @@ class AntiFly extends PluginBase implements Listener {
         if (!$player instanceof Player) {
             return;
         }
-        
+
         $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
 
         if ($event->isFlying() && !$this->canFly($player, $purePerms)) {
+            $kickReason = $this->getConfig()->getNested("flight_kick_reasons.no_permission");
             $event->setCancelled(true);
-            $player->kick("Flying without permission");
+            $player->kick($kickReason);
         }
     }
 
@@ -55,6 +57,7 @@ class AntiFly extends PluginBase implements Listener {
         }
 
         $flightPermission = $this->getConfig()->get("flight_permission");
+
         return $purePerms->hasGroupPermission($group, $flightPermission);
     }
 }
